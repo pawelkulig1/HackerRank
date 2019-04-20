@@ -13,8 +13,6 @@
 //Although this solution works, HackerRank doesn't want to accept that because of timeout - it works to slow. (I think that idea was interesting so I wanted to post this code).
 //there are few things to improve, for example building root and it's children could be done without looping and using recursion, but it was faster to implement like that.
 
-
-
 class TreeNode
 {
     int value;
@@ -32,7 +30,19 @@ public:
         children.push_back(child);
     }
     std::vector<TreeNode *> getChildren(){return children;}
+    void deleteAllChildren()
+    {
+        if(children.size() == 0) return;
+        
+        for(int i=children.size() - 1;i>=0;i--)
+        {
+            children[i]->deleteAllChildren();
+            delete children[i];
+            children.erase(children.begin() + i);
+        }
+    }
 };
+
 
 int maxDepth = 1;
 
@@ -49,6 +59,7 @@ bool addAllChildren(TreeNode *tn, int k, int depth)
         {
             TreeNode *node = new TreeNode(siblings[i]->getValue());
             tn->addChild(node);
+            //all.push_back(node);
         }
     }
     for(int i=0;i<tn->getChildren().size();i++)
@@ -60,12 +71,11 @@ bool addAllChildren(TreeNode *tn, int k, int depth)
 
 int main()
 {
-    int k = 20;
-    std::vector<int> S = {1,2,3,4,5,6,7,8,9,10,11,12,13,141};
+    int k = 7;
+    std::vector<int> S = {1,2,3,4,5,6,7,8,9,10,11,141};
     std::vector<TreeNode *> roots;
     for(int i=0;i<S.size();i++)
     {
-        //if(S[i] % k != 0 && 1 > maxDepth) maxDepth = 1;
         TreeNode *node = new TreeNode(S[i]);
         for(int j=i;j<S.size();j++)
         {
@@ -80,6 +90,12 @@ int main()
         roots.push_back(node);
     }
     std::cout<<maxDepth<<std::endl;
+    for(int i=0;i<roots.size();i++)
+    {
+        roots[i]->deleteAllChildren(); 
+        delete roots[i];
+    }
+
 }
 
 
