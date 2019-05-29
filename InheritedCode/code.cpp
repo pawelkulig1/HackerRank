@@ -5,7 +5,7 @@
 
 using namespace std;
 
-class BadLengthException
+class BadLengthException: public exception
 {
     int n;
     public:
